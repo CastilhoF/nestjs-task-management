@@ -22,28 +22,7 @@ export class TasksService {
   }
 
   async getAllTasks(filterDto: GetTasksFilterDto): Promise<Task[]> {
-    const found = await this.tasksRepository.find();
-    if (!found) {
-      throw new NotFoundException(`No tasks were found.`);
-    }
-    return found;
-  }
-
-  async getTasksWhithFilters(filterDto: GetTasksFilterDto): Promise<Task[]> {
-    const { status, search } = filterDto;
-    let tasks = await this.getAllTasks(filterDto);
-    if (status) {
-      tasks = tasks.filter((task) => task.status === status);
-    }
-    if (search) {
-      tasks = tasks.filter((task) => {
-        if (task.title.includes(search) || task.description.includes(search)) {
-          return true;
-        }
-        return false;
-      });
-    }
-    return tasks;
+    return this.tasksRepository.getTasks(filterDto);
   }
 
   createTask(createTaskDto: CreateTaskDto): Promise<Task> {
